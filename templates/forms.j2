@@ -1,0 +1,74 @@
+{% macro input(name, obj, error, label='', type='text') %}
+    <div class="field">
+        {% if label == '' %}
+            <label class="label">{{ name | capitalize }}</label>
+        {% else %}
+            <label class="label">{{ label }}</label>
+        {% endif %}
+        <div class="control">
+            <input
+                type="{{ type }}" name="{{ name }}" value="{{ obj[name] }}"
+                class="input {{ 'is-danger' if (name in error) else '' }}"/>
+        </div>
+        {% if name in error %}
+            <p class="help is-danger">{{ error[name] }}</p>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro select(name, options, obj, error, label='') %}
+<div class="field">
+    {% if label == '' %}
+        <label class="label">{{ name | capitalize }}</label>
+    {% else %}
+        <label class="label">{{ label }}</label>
+    {% endif %}
+    <div class="control">
+        <div class="select {{ 'is-danger' if name in error else '' }}">
+        <select name="{{ name }}" value="{{ obj[name] }}">
+        {% for val in options %}
+            <option value="{{ val }}" {{ 'selected' if obj[name] == val }}>{{ options[val] }}</option>
+        {% endfor %}
+        <select>
+        </div>
+        {% if name in error %}
+            <p class="help is-danger">{{ error[name] }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro file_input(name, obj, error, label='') %}
+<div class="field">
+    {% if label == '' %}
+        <label class="label">{{ name | capitalize }}</label>
+    {% else %}
+        <label class="label">{{ label }}</label>
+    {% endif %}
+    <div class="control">
+        <div class="file has-name {{ 'is-danger' if name in error else '' }}">
+        <label class="file-label">
+            <input class="file-input" type="file" name="{{ name }}"/>
+            <span class="file-cta">
+                <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                    Choose a file…
+                </span>
+            </span>
+            <span class="file-name">
+                {% if obj['data'] %}
+                {{ obj['data'].filename }}
+                {% else %}
+                e.g. genotype.csv
+                {% endif %}
+            </span>
+        </label>
+        </div>
+        {% if name in error %}
+            <p class="help is-danger">{{ error[name] }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}

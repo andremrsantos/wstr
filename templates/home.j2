@@ -1,0 +1,59 @@
+{% extends "template.j2" %}
+
+{% block content %}
+<section id="task_index">
+<h2 class="title">Currently running tasks</h2>
+{% if tasks %}
+    <table class="table is-striped is-hoverable is-fullwidth">
+    <theader>
+        <tr>
+            <th>Name</th>
+            <th>Submitter</th>
+            <th>Submited At</th>
+            <th>Last Update</th>
+            <th>Progress</th>
+        </tr>
+    </theader>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>
+                <a href="{{ url_for('.view_task', code = task.code) }}">
+                {{task.name}}
+                </a>
+            </td>
+            <td>{{task.submitter}}</td>
+            <td>{{task.created_at | fmttime}}</td>
+            <td>{{task.updated_at | fmttime}}</td>
+            <td>
+            {% if task.status == task.Status.Queued %}
+                <span class="icon">
+                    <i class="fas fa-clock"></i>
+                </span>
+            {% elif task.status == task.Status.Running %}
+                <span class="icon has-text-info">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                </span>
+            {% elif task.status == task.Status.Complete %}
+                <span class="icon has-text-success">
+                    <i class="fas fa-thumbs-up"></i>
+                </span>
+            {% elif task.status == task.Status.Failure %}
+                <span class="icon has-text-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </span>
+            {% else %}
+                <span class="icon has-text-danger">
+                    <i class="fas fa-times"></i>
+                </span>
+            {% endif %}
+            <td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+{% else %}
+    <p>No task was currently registered</p>
+{% endif %}
+</section>
+{% endblock %}

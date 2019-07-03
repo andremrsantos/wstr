@@ -1,0 +1,27 @@
+{% from 'forms.j2' import input, select, file_input %}
+{% extends "template.j2" %}
+
+{% block content %}
+<form action="/add" method="POST" enctype="multipart/form-data" class="form">
+    {{ input("name", task, error) }}
+    {{ input("submitter", task, error) }}
+    {{ select("reference", {"": "None", "ancestry": "62 AIM - Reference Panel"}, task, error) }}
+    {{ input("num_pops", task, error, type="number", label="Number of Populations (K)")}}
+    {{ file_input("data", task, error)}}
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link">Submit</button>
+        </div>
+    </div>
+</form>
+{% endblock content %}
+
+{% block script %}
+<script>
+$(".file-input").bind("change", function() {
+    var filename = $(".file-input").val();
+    $(".file-name").text(filename.replace("C:\\fakepath\\", ""));
+});
+</script>
+{% endblock script %}

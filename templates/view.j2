@@ -1,0 +1,118 @@
+{% extends "template.j2" %}
+
+{% block content %}
+<h2 class="title">{{ task.name }}</h2>
+<div class="columns">
+    <aside class="column is-one-third">
+    <div class="card">
+        <header class="card-header">
+            <h4 class="card-header-title">
+            Task {{ '#%03d' % task.code }}
+            </h4>
+        </header>
+        <div class="card-content">
+            <div class="content">
+            <dl>
+
+            <dt class="has-text-weight-medium">Status</dt>
+            <dd>
+            {% if task.status == task.Status.Queued %}
+                <span>Queued</span>
+                <span class="icon"><i class="fas fa-clock"></i></span>
+            {% elif task.status == task.Status.Running %}
+                <span>Running</span>
+                <span class="icon has-text-info">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                </span>
+            {% elif task.status == task.Status.Complete %}
+                <span>Completed</span>
+                <span class="icon has-text-success">
+                    <i class="fas fa-thumbs-up"></i>
+                </span>
+            {% elif task.status == task.Status.Failure %}
+                <span>Failed</span>
+                <span class="icon has-text-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </span>
+            {% else %}
+                <span>Canceled</span>
+                <span class="icon has-text-danger">
+                    <i class="fas fa-times"></i>
+                </span>
+            {% endif %}
+            </dd>
+            <dt class="has-text-weight-medium">Submitter</dt>
+            <dd>{{ task.submitter }}</dd>
+            <dt class="has-text-weight-medium">Reference Panel</dt>
+            <dd>{{ task.reference if task.reference else 'None' }}</dd>
+            <dt class="has-text-weight-medium">Number of Populations (K)</dt>
+            <dd>{{ task.num_pops }}</dd>
+            <dt class="has-text-weight-medium">Created at</dt>
+            <dd>{{ task.created_at | fmttime }}</dd>
+            <dt class="has-text-weight-medium">Last Update</dt>
+            <dd>{{ task.updated_at | fmttime}}</dd>
+            
+            {% if task.status == task.Status.Complete %}
+            <dt class="has-text-weight-medium">Download</dt>
+            <dd><a href="{{ url_for('.download_output', code=task.code) }}">Output</a></dd>
+            <dd><a href="{{ url_for('.download_log', code=task.code) }}">Log</a></dd>
+            <dd><a href="{{ url_for('.download_q', code=task.code) }}">Qfile</a></dd>
+        {% endif %}
+            </dl>
+            </div>
+        </div>
+
+        <footer class="card-footer">
+        </footer>
+    </div>
+    </aside>
+
+    <div class="column">
+        {% if task.status == task.Status.Complete %}
+        <div id="barplot"></div>
+        <div class="section">
+        <div class="content is-small">
+        <h3 class="title">Ancestry Panel</h3>
+        <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+            <theader>
+                <th>Sample</th>
+                {% for i in range(task.num_pops) %}
+                <th>Pop #{{ "%02d" % i }}</th>
+                {% endfor %}
+            </theader>
+            <tbody>
+            {% for name in ancestry["names"] %}
+                <tr>
+                    <th>{{ name }}</th>
+                    {% for val in ancestry[name] %}
+                        <td>{{ "%0.3f" % val }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        </div>
+        {% else %}
+        <p>Waiting task to be complete</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+var data = {{ barplot | tojson }};
+var layout = {
+    barmode: 'stack',
+    barnorm: 'percent',
+    height: 300,
+    legend: { x: 0, y: 1.25, orientation: "h"},
+    margin: {
+        l: 50, r: 10, b: 100, t: 20, pad: 4
+    }
+};
+Plotly.newPlot('barplot', data, layout, {responsive: true});
+</script>
+{% endblock %}
