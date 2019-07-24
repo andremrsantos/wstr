@@ -7,7 +7,7 @@ ENV STRUCTURE_LINK http://web.stanford.edu/group/pritchardlab/structure_software
 ENV STRUCTURE_FOLDER structure_kernel_src
 ENV STRUCTURE $STRUCTURE_FOLDER/structure
 
-RUN apk --update add linux-headers pcre-dev && \
+RUN apk --update add sqlite-dev linux-headers pcre-dev && \
     apk --update --no-cache add --virtual build-dependencies \
     build-base gcc && \
     wget $STRUCTURE_LINK && \
