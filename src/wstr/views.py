@@ -3,7 +3,7 @@ import datetime
 from flask import Blueprint
 from flask import request, url_for, redirect, render_template, abort, send_file
 from .db import db, submit_job, Job
-from .job.name import generate_name
+from .name import generate_name
 
 ALLOWED_REF_PANEL = ["", "ancestry"]
 ALLOWED_EXTENSIONS = {"csv", "tsv", "txt", "str"}

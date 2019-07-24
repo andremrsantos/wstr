@@ -10,7 +10,7 @@ from peewee import CharField, IntegerField, DateTimeField
 from werkzeug.utils import secure_filename
 from uwsgidecorators import spool
 from .config import Config
-from .job.name import generate_name
+from .name import generate_name
 from .io import get_std_references, QFile, Reference, Genotype
 
 REF_PANELS = get_std_references(Config.RESOURCE)
