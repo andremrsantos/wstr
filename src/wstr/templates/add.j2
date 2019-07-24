@@ -2,7 +2,7 @@
 {% extends "template.j2" %}
 
 {% block content %}
-<form action="/add" method="POST" enctype="multipart/form-data" class="form">
+<form action="{{ url_for(".create_task") }}" method="POST" enctype="multipart/form-data" class="form">
     {{ input("name", task, error) }}
     {{ input("submitter", task, error) }}
     {{ select("ref_panel", {"": "None", "ancestry": "62 AIM - Reference Panel"}, task, error, label="Reference Panel") }}
