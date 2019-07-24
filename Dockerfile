@@ -4,7 +4,7 @@ COPY . /app
 WORKDIR /app
 
 ENV STRUCTURE_LINK http://web.stanford.edu/group/pritchardlab/structure_software/release_versions/v2.3.4/structure_kernel_source.tar.gz
-ENV STRUCTURE_FOLDER structure_kernel_src
+ENV STRUCTURE_FOLDER /app/structure_kernel_src
 ENV STRUCTURE $STRUCTURE_FOLDER/structure
 
 RUN apk --update add sqlite-dev linux-headers pcre-dev && \
