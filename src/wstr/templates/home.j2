@@ -18,8 +18,8 @@
         {% for task in tasks %}
         <tr>
             <td>
-                <a href="{{ url_for('.view_task', code = task.code) }}">
-                {{task.name}}
+                <a href="{{ url_for('.view_task', id = task.id) }}">
+                {{task.title}}
                 </a>
             </td>
             <td>{{task.submitter}}</td>

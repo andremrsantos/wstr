@@ -1,0 +1,2 @@
+graft src/wstr/static
+graft src/wstr/templates

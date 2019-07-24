@@ -5,9 +5,9 @@
 <form action="/add" method="POST" enctype="multipart/form-data" class="form">
     {{ input("name", task, error) }}
     {{ input("submitter", task, error) }}
-    {{ select("reference", {"": "None", "ancestry": "62 AIM - Reference Panel"}, task, error) }}
-    {{ input("num_pops", task, error, type="number", label="Number of Populations (K)")}}
-    {{ file_input("data", task, error)}}
+    {{ select("ref_panel", {"": "None", "ancestry": "62 AIM - Reference Panel"}, task, error, label="Reference Panel") }}
+    {{ input("n_pops", task, error, type="number", label="Number of Populations (K)")}}
+    {{ file_input("datafile", task, error)}}
 
     <div class="field">
         <div class="control">

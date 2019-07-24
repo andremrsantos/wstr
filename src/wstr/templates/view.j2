@@ -1,13 +1,13 @@
 {% extends "template.j2" %}
 
 {% block content %}
-<h2 class="title">{{ task.name }}</h2>
+<h2 class="title">{{ task.title }}</h2>
 <div class="columns">
     <aside class="column is-one-third">
     <div class="card">
         <header class="card-header">
             <h4 class="card-header-title">
-            Task {{ '#%03d' % task.code }}
+            Task {{ '#%03d' % task.id }}
             </h4>
         </header>
         <div class="card-content">
@@ -44,9 +44,9 @@
             <dt class="has-text-weight-medium">Submitter</dt>
             <dd>{{ task.submitter }}</dd>
             <dt class="has-text-weight-medium">Reference Panel</dt>
-            <dd>{{ task.reference if task.reference else 'None' }}</dd>
+            <dd>{{ task.param_reference if task.reference else 'None' }}</dd>
             <dt class="has-text-weight-medium">Number of Populations (K)</dt>
-            <dd>{{ task.num_pops }}</dd>
+            <dd>{{ task.param_k }}</dd>
             <dt class="has-text-weight-medium">Created at</dt>
             <dd>{{ task.created_at | fmttime }}</dd>
             <dt class="has-text-weight-medium">Last Update</dt>
@@ -54,9 +54,9 @@
             
             {% if task.status == task.Status.Complete %}
             <dt class="has-text-weight-medium">Download</dt>
-            <dd><a href="{{ url_for('.download_output', code=task.code) }}">Output</a></dd>
-            <dd><a href="{{ url_for('.download_log', code=task.code) }}">Log</a></dd>
-            <dd><a href="{{ url_for('.download_q', code=task.code) }}">Qfile</a></dd>
+            <dd><a href="{{ url_for('.download_task_out', id=task.id) }}">Output</a></dd>
+            <dd><a href="{{ url_for('.download_task_log', id=task.id) }}">Log</a></dd>
+            <dd><a href="{{ url_for('.download_task_q', id=task.id) }}">Qfile</a></dd>
         {% endif %}
             </dl>
             </div>
@@ -66,25 +66,23 @@
         </footer>
     </div>
     </aside>
-
     <div class="column">
         {% if task.status == task.Status.Complete %}
         <div id="barplot"></div>
-        <div class="section">
         <div class="content is-small">
         <h3 class="title">Ancestry Panel</h3>
         <table class="table is-bordered is-striped is-hoverable is-fullwidth">
             <theader>
                 <th>Sample</th>
-                {% for i in range(task.num_pops) %}
+                {% for i in range(ancestry.n_ancestries) %}
                 <th>Pop #{{ "%02d" % i }}</th>
                 {% endfor %}
             </theader>
             <tbody>
-            {% for name in ancestry["names"] %}
+            {% for (name, values) in ancestry %}
                 <tr>
                     <th>{{ name }}</th>
-                    {% for val in ancestry[name] %}
+                    {% for val in values %}
                         <td>{{ "%0.3f" % val }}</td>
                     {% endfor %}
                 </tr>
@@ -92,9 +90,10 @@
             </tbody>
         </table>
         </div>
-        </div>
+        {% elif task.status == task.Status.Failure %}
+        <p>{{ task.error | pprint }}</p>
         {% else %}
-        <p>Waiting task to be complete</p>
+        <p>Waiting the task to be completed</p>
         {% endif %}
     </div>
 </div>
