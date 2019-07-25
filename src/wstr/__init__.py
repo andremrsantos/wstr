@@ -3,9 +3,9 @@ from flask import Flask
 
 
 def create_app():
-    app = Flask(__name__)
-    app.config.from_object(__name__)
-    app.config.from_object("wstr.config.Config")
+    from .config import Config
+    app = Flask(__name__, static_url_path=Config.APPLICATION_ROOT)
+    app.config.from_object(Config)
 
     # Create Work directory
     if not os.path.isdir(app.config["WORK_DIR"]):
